@@ -1,0 +1,46 @@
+package com.teamsk;
+
+import java.io.*;
+import java.util.*;
+
+public class Random_C {
+
+    private static final String FILE_PATH = "File/MovieList.csv";
+
+    public void recommendRandomMovie() {
+        List<String[]> movieList = readCSV(FILE_PATH);
+
+        if (movieList.isEmpty()) {
+            System.out.println("😢 영화 목록이 비어 있습니다.");
+            return;
+        }
+
+        Random rand = new Random();
+        String[] pick = movieList.get(rand.nextInt(movieList.size()));
+
+        System.out.println("\n🎲 랜덤 추천 영화 결과!");
+        System.out.printf("👉 %s | %s | %s | %s | %s | 감독: %s\n",
+                pick[0], pick[4], pick[2], pick[1], pick[3], pick[5]); // title, genre, country, year, runtime, director
+    }
+
+    private List<String[]> readCSV(String path) {
+        List<String[]> data = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            String line;
+            boolean isFirst = true;
+
+            while ((line = br.readLine()) != null) {
+                if (isFirst) {
+                    isFirst = false;
+                    continue; // 헤더 건너뛰기
+                }
+                data.add(line.split(","));
+            }
+        } catch (IOException e) {
+            System.out.println("CSV 파일 읽기 오류: " + e.getMessage());
+        }
+
+        return data;
+    }
+}
